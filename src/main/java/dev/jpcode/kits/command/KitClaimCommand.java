@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import dev.jpcode.kits.*;
 import dev.jpcode.kits.access.ServerPlayerEntityAccess;
 
-import static dev.jpcode.kits.InventoryUtil.offerAllCopies;
+import static dev.jpcode.kits.InventoryUtil.equipKit;
 import static dev.jpcode.kits.KitUtil.runCommands;
 
 public class KitClaimCommand implements Command<CommandSourceStack> {
@@ -84,7 +84,6 @@ public class KitClaimCommand implements Command<CommandSourceStack> {
             return -2;
         }
 
-        Inventory playerInventory = player.getInventory();
         playerData.useKit(kitName, kitRecord.cooldownKey());
 
         // Record ring selection if this is a permanent choice ring
@@ -92,7 +91,7 @@ public class KitClaimCommand implements Command<CommandSourceStack> {
             playerData.recordRingSelection(kitRecord.ringName(), kitName);
         }
 
-        offerAllCopies(kit.inventory(), playerInventory);
+        equipKit(kit.inventory(), player);
         if (!kit.commands().isEmpty()) runCommands(player, kit.commands());
 
         commandSource.sendSuccess(() ->
